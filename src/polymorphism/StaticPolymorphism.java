@@ -1,5 +1,5 @@
 // Static methods are not polymorphic.
-package reusing;
+package polymorphism;
 
 class StaticSuper {
     public static String staticGet() {

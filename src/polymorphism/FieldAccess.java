@@ -1,5 +1,5 @@
 // Direct field
-package reusing;
+package polymorphism;
 
 class Super {
     public int field = 0;

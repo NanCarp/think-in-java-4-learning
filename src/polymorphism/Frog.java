@@ -1,4 +1,4 @@
-package reusing;
+package polymorphism;
 
 import static net.mindview.util.Print.print;
 
