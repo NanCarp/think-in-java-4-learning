@@ -117,22 +117,11 @@ class  User
 TestFinal.java:12: 错误: 从内部类引用的本地变量必须是最终变量或实际上的最终变量  
                         System.out.println("user.name-->"+user.name);
 
+p201  
+Parcel11.java  
 
+p204  
+为什么需要内部类   
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+p205  
+10.8.1 闭包与回调  
