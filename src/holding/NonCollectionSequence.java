@@ -3,37 +3,34 @@ package holding;
 import typeinfo.pets.Pet;
 import typeinfo.pets.Pets;
 
-import java.util.AbstractCollection;
 import java.util.Iterator;
 
 /**
- * Created by nanca on 8/2/2017.
+ * Created by nanca on 8/3/2017.
  */
-public class CollectionSequence extends AbstractCollection<Pet> {
-    private Pet[] pets = Pets.createArray(8);
-    public int size() {
-        return pets.length;
-    }
+
+class PetSequence {
+    protected Pet[] pets = Pets.createArray(8);
+}
+
+public class NonCollectionSequence extends PetSequence {
     public Iterator<Pet> iterator() {
         return new Iterator<Pet>() {
             private int index = 0;
             public boolean hasNext() {
                 return index < pets.length;
             }
-
             public Pet next() {
                 return pets[index++];
             }
-
-            public void remove() { // Not Implemented
+            public void remove() { // Not implemented
                 throw new UnsupportedOperationException();
             }
         };
     }
 
     public static void main(String[] args) {
-        CollectionSequence c = new CollectionSequence();
-        InterfaceVsIterator.display(c);
-        InterfaceVsIterator.display(c.iterator());
+        NonCollectionSequence nc = new NonCollectionSequence();
+        InterfaceVsIterator.display(nc.iterator());
     }
 }
