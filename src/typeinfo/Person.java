@@ -36,5 +36,5 @@ class Person {
         }
     }
 
-    public static final Person Null = new NullPerson();
+    public static final Person NULL = new NullPerson();
 }
