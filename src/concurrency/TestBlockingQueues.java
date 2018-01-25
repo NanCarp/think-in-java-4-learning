@@ -1,6 +1,7 @@
 package concurrency;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.concurrent.BlockingQueue;
 
@@ -12,11 +13,10 @@ import static net.mindview.util.Print.print;
  */
 
 class LiftOffRunner implements Runnable {
-
     private BlockingQueue<LiftOff> rockets;
 
-    public LiftOffRunner(BlockingQueue<LiftOff> queue) {
-        this.rockets = queue;
+    public LiftOffRunner(BlockingQueue<LiftOff> rockets) {
+        this.rockets = rockets;
     }
 
     public void add(LiftOff lo) {
@@ -32,7 +32,7 @@ class LiftOffRunner implements Runnable {
         try {
             while (!Thread.interrupted()) {
                 LiftOff rocket = rockets.take();
-                rocket.run(); // Use this thread
+                rocket.run();
             }
         } catch (InterruptedException e) {
             print("Waking from take()");
@@ -42,21 +42,18 @@ class LiftOffRunner implements Runnable {
 }
 
 public class TestBlockingQueues {
-    static void getKey() {
+    static void getkey() {
         try {
-            // Compensate for Windows/Linux difference in the
-            // length of the result produced by the Entry key:
-            new BufferedReader(
-                    new InputStreamReader(System.in)
-            ).readLine();
-        } catch (java.io.IOException e) {
+            // Compensate
+            new BufferedReader(new InputStreamReader(System.in)).readLine();
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    static void getKey(String message) {
+    static void getkey(String message) {
         print(message);
-        getKey();
+        getkey();
     }
 
     static void test(String msg, BlockingQueue<LiftOff> queue) {

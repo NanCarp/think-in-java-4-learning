@@ -35,7 +35,7 @@ class Sender implements Runnable {
                 }
             }
         } catch (IOException e) {
-            print(e + " Sender write exception");
+            print(e + " Sender write  exception");
         } catch (InterruptedException e) {
             print(e + " Sender sleep interrupted");
         }

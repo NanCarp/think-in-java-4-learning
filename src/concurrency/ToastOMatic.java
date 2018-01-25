@@ -13,18 +13,13 @@ import static net.mindview.util.Print.printnb;
  * Created by nanca on 10/10/2017.
  * A toaster that uses queues.
  */
-
 class Toast {
-    public enum Status {
-        DRY, BUTTERED, JAMMED
-    }
-
+    public enum Status { DRY, BUTTERED, JAMMED}
     private Status status = Status.DRY;
-
     private final int id;
 
-    public Toast(int idn) {
-        id = idn;
+    public Toast(int id) {
+        this.id = id;
     }
 
     public void butter() {
@@ -39,7 +34,7 @@ class Toast {
         return status;
     }
 
-    public int getId (){
+    public int getId() {
         return id;
     }
 
@@ -52,15 +47,12 @@ class ToastQueue extends LinkedBlockingQueue<Toast> {
 }
 
 class Toaster implements Runnable {
-
     private ToastQueue toastQueue;
-
     private int count = 0;
-
     private Random rand = new Random(47);
 
-    public Toaster(ToastQueue tq) {
-        toastQueue = tq;
+    public Toaster(ToastQueue toastQueue) {
+        this.toastQueue = toastQueue;
     }
 
     @Override
@@ -71,7 +63,7 @@ class Toaster implements Runnable {
                 // Make toast
                 Toast t = new Toast(count++);
                 print(t);
-                // Insert int queue
+                // Insert into queue
                 toastQueue.put(t);
             }
         } catch (InterruptedException e) {
@@ -85,16 +77,16 @@ class Toaster implements Runnable {
 class Butterer implements Runnable {
     private ToastQueue dryQueue, butteredQueue;
 
-    public Butterer(ToastQueue dry, ToastQueue buttered) {
-        dryQueue = dry;
-        butteredQueue = buttered;
+    public Butterer(ToastQueue dryQueue, ToastQueue butteredQueue) {
+        this.butteredQueue = butteredQueue;
+        this.dryQueue = dryQueue;
     }
 
     @Override
     public void run() {
         try {
             while (!Thread.interrupted()) {
-                // Blocks until next piece of toast is available
+                // Blocks until next piece of toast is available:
                 Toast t = dryQueue.take();
                 t.butter();
                 print(t);
@@ -107,13 +99,13 @@ class Butterer implements Runnable {
     }
 }
 
-// Apply jam to buttered toast:
+// apply jam to buttered toast:
 class Jammer implements Runnable {
     private ToastQueue butteredQueue, finishedQueue;
 
-    public Jammer(ToastQueue buttered, ToastQueue finished) {
-        this.butteredQueue = buttered;
-        this.finishedQueue = finished;
+    public Jammer(ToastQueue butteredQueue, ToastQueue finishedQueue) {
+        this.butteredQueue = butteredQueue;
+        this.finishedQueue = finishedQueue;
     }
 
     @Override
@@ -133,14 +125,13 @@ class Jammer implements Runnable {
     }
 }
 
-// Consume the toast;
+// Consume the toast:
 class Eater implements Runnable {
     private ToastQueue finishedQueue;
-
     private int counter = 0;
 
-    public Eater(ToastQueue finished) {
-        this.finishedQueue = finished;
+    public Eater(ToastQueue finishedQueue) {
+        this.finishedQueue = finishedQueue;
     }
 
     @Override
@@ -149,13 +140,12 @@ class Eater implements Runnable {
             while (!Thread.interrupted()) {
                 // Blocks until next piece of toast is available:
                 Toast t = finishedQueue.take();
-                // Verify that the toast is coming in order,
+                // Verify tha all toast is coming in order,
                 // and that all pieces are getting jammed:
                 if (t.getId() != counter++ || t.getStatus() != Toast.Status.JAMMED) {
                     print(">>>> Error: " + t);
-                    System.exit(1);
                 } else {
-                    print("Chomp! " + t);
+                    print("Chop! " + t);
                 }
             }
         } catch (InterruptedException e) {
@@ -167,9 +157,9 @@ class Eater implements Runnable {
 
 public class ToastOMatic {
     public static void main(String[] args) throws Exception {
-        ToastQueue dryQueue = new ToastQueue(),
-                   butteredQueue = new ToastQueue(),
-                   finishedQueue = new ToastQueue();
+        ToastQueue dryQueue = new ToastQueue();
+        ToastQueue butteredQueue = new ToastQueue();
+        ToastQueue finishedQueue = new ToastQueue();
         ExecutorService exec = Executors.newCachedThreadPool();
         exec.execute(new Toaster(dryQueue));
         exec.execute(new Butterer(dryQueue, butteredQueue));
