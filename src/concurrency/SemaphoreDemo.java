@@ -45,44 +45,36 @@ class CheckoutTask<T> implements Runnable {
 
 public class SemaphoreDemo {
     final static int SIZE = 25;
-    public static void main(String[] args) throws Exception {
-        final Pool<Fat> pool = new Pool<>(Fat.class, SIZE);
+
+    public static void main(String[] args) throws Exception{
+        final Pool<Fat> pool = new Pool<Fat>(Fat.class, SIZE);
         ExecutorService exec = Executors.newCachedThreadPool();
-        for(int i = 0; i < SIZE; i++) {
+        for (int i = 0; i < SIZE; i++) {
             exec.execute(new CheckoutTask<Fat>(pool));
         }
         print("All CheckoutTasks created");
         List<Fat> list = new ArrayList<>();
         for (int i = 0; i < SIZE; i++) {
             Fat f = pool.checkOut();
-            printnb(i + ": main() thread checked out ");
+            printnb(i + ":main() thread checked out");
             f.operation();
             list.add(f);
         }
-        Future<?> blocked = exec.submit(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    // Semaphore prevents additional checkout,
-                    // so call is blocked:
-                    pool.checkOut();
-                } catch(InterruptedException e) {
-                    print("checkOut() Interrupted");
-                }
-                
+        Future<?> blocked = exec.submit(()-> {
+            try {
+                // Semaphore prevents additional checkout,
+                // so call is blocked:
+                pool.checkOut();
+            } catch (InterruptedException e) {
+                print("checkOut() Interrupted");
             }
-            
         });
         TimeUnit.SECONDS.sleep(2);
         blocked.cancel(true); // Break out of blocked call
         print("Checking in objects in " + list);
-        for (Fat f : list) {
-            pool.checkIn(f);
-        }
-        for (Fat f : list) {
-            pool.checkIn(f); // Second checkIn ignored
-        }
+        list.forEach(f -> pool.checkIn(f));
+        list.forEach(f -> pool.checkIn(f)); // Second checkIn ignored
+
         exec.shutdown();
     }
 }

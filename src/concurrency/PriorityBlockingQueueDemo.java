@@ -21,7 +21,6 @@ class PrioritizedTask implements Runnable, Comparable<PrioritizedTask> {
     private static int counter = 0;
     private final int id = counter++;
     private final int priority;
-
     protected static List<PrioritizedTask> sequence = new ArrayList<>();
 
     public PrioritizedTask(int priority) {
@@ -31,7 +30,8 @@ class PrioritizedTask implements Runnable, Comparable<PrioritizedTask> {
 
     @Override
     public int compareTo(PrioritizedTask arg) {
-        return priority < arg.priority ? 1 : (priority > arg.priority ? -1 : 0);
+        return priority < arg.priority ? 1 :
+                (priority > arg.priority ? -1 : 0);
     }
 
     @Override
@@ -59,7 +59,6 @@ class PrioritizedTask implements Runnable, Comparable<PrioritizedTask> {
             super(-1); // Lowest priority in this program
             exec = e;
         }
-
         public void run() {
             int count = 0;
             for (PrioritizedTask pt : sequence) {
@@ -67,10 +66,10 @@ class PrioritizedTask implements Runnable, Comparable<PrioritizedTask> {
                 if (++count % 5 == 0) {
                     print();
                 }
-                print();
-                print(this + " Calling shutdownNow()");
-                exec.shutdownNow();
             }
+            print();
+            print(this + "Calling shutdownNow()");
+            exec.shutdownNow();
         }
     }
 }
@@ -80,17 +79,15 @@ class PrioritizedTaskProducer implements Runnable {
     private Queue<Runnable> queue;
     private ExecutorService exec;
 
-    public PrioritizedTaskProducer(
-            Queue<Runnable> q, ExecutorService e
-    ) {
+    public PrioritizedTaskProducer(Queue<Runnable> q, ExecutorService e) {
         queue = q;
-        exec = e; // Usedd for EndSentinel
+        exec = e; // Used for EndSentinel
     }
 
     @Override
     public void run() {
-        // Unbounded queue: never blocks.
-        // Fill it up fast with random priorities:
+        // Unbounded queue; never blocks.
+        //Fill it up fast with random priorityies:
         for (int i = 0; i < 20; i++) {
             queue.add(new PrioritizedTask(rand.nextInt(10)));
             Thread.yield();
