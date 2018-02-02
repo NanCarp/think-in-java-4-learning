@@ -1,4 +1,5 @@
 // Adding several Adapter Methods.
+// 添加几个适配器方法
 package holding;
 
 import java.util.ArrayList;
