@@ -2,7 +2,7 @@ package concurrency;
 
 /**
  * @ClassName: BasicTreads.java
- * @Description: The most basic use of the Thread class.
+ * @Description: Thread 类的最基本的使用方式.
  */
 public class BasicTreads {
     public static void main(String[] args) {
